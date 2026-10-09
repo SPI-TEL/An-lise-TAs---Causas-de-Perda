@@ -110,17 +110,17 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-1" id="insights-container">
       <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/60">
-        <span class="text-[10px] font-bold text-sky-700 uppercase block mb-1">Segmento Ofensor Principal</span>
-        <p class="text-xs text-slate-700 leading-relaxed" id="insight-segmento">Analisando segmento com maior volume de estouros de SLA...</p>
+        <span class="text-[10px] font-bold text-sky-700 uppercase block mb-1">Distribuição de Rede</span>
+        <p class="text-xs text-slate-700 leading-relaxed" id="insight-segmento">Analisando proporção entre Rede Fixa e Móvel...</p>
       </div>
 
       <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/60">
-        <span class="text-[10px] font-bold text-rose-700 uppercase block mb-1">Causa Raiz Predominante (Coluna M)</span>
+        <span class="text-[10px] font-bold text-rose-700 uppercase block mb-1">Causa Raiz Predominante</span>
         <p class="text-xs text-slate-700 leading-relaxed" id="insight-causa">Mapeando principais fatores causadores de atraso no atendimento...</p>
       </div>
 
       <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200/60">
-        <span class="text-[10px] font-bold text-emerald-700 uppercase block mb-1">Efetividade de Tratativas (Coluna L)</span>
+        <span class="text-[10px] font-bold text-emerald-700 uppercase block mb-1">Efetividade de Tratativas</span>
         <p class="text-xs text-slate-700 leading-relaxed" id="insight-tratativa">Avaliando índice de TAs justificadas vs pendentes de ação...</p>
       </div>
     </div>
@@ -186,7 +186,7 @@
         <span class="text-2xl font-extrabold text-emerald-600" id="kpi-justificados">0</span>
         <span class="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded" id="kpi-perc-just">0%</span>
       </div>
-      <p class="text-[10px] text-slate-400 mt-1">Análise Coluna L</p>
+      <p class="text-[10px] text-slate-400 mt-1">Tratados com justificativa</p>
     </div>
 
     <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
@@ -215,11 +215,13 @@
         </select>
       </div>
 
-      <!-- Segmento Filter -->
+      <!-- Tipo de Rede Filter -->
       <div class="w-full sm:w-auto">
-        <label class="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">Filtrar Causa (Col. M)</label>
-        <select id="filter-segmento" onchange="applyFilters()" class="w-full sm:w-48 text-xs bg-slate-50 border border-slate-300 rounded-lg p-2 font-medium text-slate-700 focus:ring-2 focus:ring-sky-500 focus:outline-none">
-          <option value="ALL">Todas as Causas</option>
+        <label class="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">Tipo de Rede</label>
+        <select id="filter-tipo-rede" onchange="applyFilters()" class="w-full sm:w-40 text-xs bg-slate-50 border border-slate-300 rounded-lg p-2 font-medium text-slate-700 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+          <option value="ALL">Todas as Redes</option>
+          <option value="Fixa">Rede Fixa</option>
+          <option value="Móvel">Rede Móvel</option>
         </select>
       </div>
 
@@ -241,7 +243,7 @@
 
       <!-- Status Tratativa Filter -->
       <div class="w-full sm:w-auto">
-        <label class="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">Análise (Col. L)</label>
+        <label class="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">Status Análise</label>
         <select id="filter-status" onchange="applyFilters()" class="w-full sm:w-36 text-xs bg-slate-50 border border-slate-300 rounded-lg p-2 font-medium text-slate-700 focus:ring-2 focus:ring-sky-500 focus:outline-none">
           <option value="ALL">Todos os Status</option>
           <option value="Justificado">Justificados</option>
@@ -270,14 +272,14 @@
           <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
             <i class="fa-solid fa-chart-line text-sky-600"></i> Evolução Semanal (Últimas 4 Semanas + Atual)
           </h3>
-          <p class="text-[11px] text-slate-400">Tendência das últimas semanas registradas</p>
+          <p class="text-[11px] text-slate-400">Padrão nacional ISO 8601 (Semana Atual em destaque)</p>
         </div>
       </div>
       <div class="h-56 relative">
         <canvas id="chart-semanal"></canvas>
       </div>
       <div class="pt-2 text-[11px] text-slate-500 text-center border-t border-slate-100">
-        Evolução semanal por período
+        Acompanhamento semanal contínuo
       </div>
     </div>
 
@@ -287,7 +289,7 @@
           <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
             <i class="fa-solid fa-chart-column text-indigo-600"></i> Evolução Mensal
           </h3>
-          <p class="text-[11px] text-slate-400">Histórico de volume por mês</p>
+          <p class="text-[11px] text-slate-400">Histórico acumulado de volume por mês</p>
         </div>
       </div>
       <div class="h-56 relative">
@@ -298,13 +300,14 @@
       </div>
     </div>
 
+    <!-- TÍTULO ATUALIZADO CONFORME PEDIDO -->
     <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
       <div class="flex items-center justify-between mb-2">
         <div>
           <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
-            <i class="fa-solid fa-[#chart-bar] fa-chart-bar text-rose-500"></i> Principais Causas da Perda (Coluna M)
+            <i class="fa-solid fa-[#chart-bar] fa-chart-bar text-rose-500"></i> Principais Causas da Perda
           </h3>
-          <p class="text-[11px] text-slate-400">Ranking das causas classificadas na Coluna M</p>
+          <p class="text-[11px] text-slate-400">Ranking das principais causas identificadas</p>
         </div>
       </div>
       <div class="h-56 relative">
@@ -317,7 +320,7 @@
 
   </section>
 
-  <!-- CHARTS ROW 2: OCORRÊNCIAS POR DDD (VERMELHO NO OFENSOR), TRATATIVAS E TOP 10 SEGMENTOS -->
+  <!-- CHARTS ROW 2: OCORRÊNCIAS POR DDD (VERMELHO NO OFENSOR), TRATATIVAS E TIPO DE REDE (FIXA E MÓVEL) -->
   <section class="grid grid-cols-1 lg:grid-cols-3 gap-5">
     
     <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
@@ -338,7 +341,7 @@
       <div class="flex items-center justify-between mb-2">
         <div>
           <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
-            <i class="fa-solid fa-pie-chart text-amber-500"></i> Status da Análise (Coluna L)
+            <i class="fa-solid fa-pie-chart text-amber-500"></i> Status da Análise
           </h3>
           <p class="text-[11px] text-slate-400">Proporção Justificados vs. Pendentes</p>
         </div>
@@ -348,17 +351,21 @@
       </div>
     </div>
 
+    <!-- GRÁFICO TIPO DE REDE (FIXA E MÓVEL COM QTD E %) -->
     <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
       <div class="flex items-center justify-between mb-2">
         <div>
           <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
-            <i class="fa-solid fa-layer-group text-purple-600"></i> Top 10 Detalhamentos
+            <i class="fa-solid fa-network-wired text-purple-600"></i> Tipo de Rede (Fixa e Móvel)
           </h3>
-          <p class="text-[11px] text-slate-400">Ranking dos 10 principais motivos de perda</p>
+          <p class="text-[11px] text-slate-400">Quantidade e % por tecnologia de rede</p>
         </div>
       </div>
       <div class="h-56 relative">
-        <canvas id="chart-segmentos"></canvas>
+        <canvas id="chart-tipo-rede"></canvas>
+      </div>
+      <div class="pt-2 text-[11px] text-slate-500 text-center border-t border-slate-100 font-medium" id="lbl-tipo-rede-summary">
+        Proporção de impactados por tipo de rede
       </div>
     </div>
 
@@ -453,6 +460,7 @@
             <th class="p-3">Evento / Data</th>
             <th class="p-3">DDD</th>
             <th class="p-3">Site / Localidade</th>
+            <th class="p-3">Rede</th>
             <th class="p-3">Coordenador</th>
             <th class="p-3">Descrição Causa (Col. J)</th>
             <th class="p-3">Classificação Causa (Col. M)</th>
@@ -495,8 +503,8 @@
             <span class="font-bold text-slate-800" id="m-ddd">--</span>
           </div>
           <div>
-            <span class="text-[10px] text-slate-400 uppercase font-semibold block">Classificação (M)</span>
-            <span class="font-bold text-slate-800" id="m-segmento">--</span>
+            <span class="text-[10px] text-slate-400 uppercase font-semibold block">Tipo de Rede</span>
+            <span class="font-bold text-slate-800" id="m-rede">--</span>
           </div>
           <div>
             <span class="text-[10px] text-slate-400 uppercase font-semibold block">Tempo Perda</span>
@@ -522,7 +530,7 @@
     </div>
   </div>
 
-  <!-- JAVASCRIPT: PROCESSAMENTO EXATO DAS COLUNAS H, I, J, K, L, M DA PLANILHA -->
+  <!-- JAVASCRIPT: CÁLCULO DE SEMANAS ISO 8601 E MAPA FIXA/MÓVEL -->
   <script>
     const GOOGLE_SHEETS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQKGyoNQrVUBIbfOwpUMsmvPgvPOgSPF-7BaORqi-8JmNoTHVkWXuBk20vBpc29MaNIFXz56_McLbi9/pub?gid=134770159&single=true&output=csv';
 
@@ -536,13 +544,22 @@
     let chartCausasInst = null;
     let chartDDDInst = null;
     let chartTratativasInst = null;
-    let chartSegmentosInst = null;
+    let chartTipoRedeInst = null;
 
     const NOME_MESES = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 
     window.addEventListener('DOMContentLoaded', () => {
       fetchGoogleSheetsData();
     });
+
+    // CÁLCULO OFICIAL DA SEMANA ISO 8601 (PADRÃO NACIONAL)
+    function getISOWeekNumber(d) {
+      const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+      const dayNum = date.getUTCDay() || 7;
+      date.setUTCDate(date.getUTCDate() + 4 - dayNum);
+      const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+      return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+    }
 
     function fetchGoogleSheetsData() {
       const bannerText = document.getElementById('status-text');
@@ -578,7 +595,6 @@
       document.getElementById('status-text').innerHTML = `<strong>Atenção:</strong> ${msg}`;
     }
 
-    // PROCESSAMENTO DAS COLUNAS EXATAS DA FOTO (H, I, J, K, L, M)
     function processRawData(rows) {
       parsedData = rows.map((r, index) => {
         const getVal = (possibleKeys, defaultVal = '') => {
@@ -607,41 +623,53 @@
         const ddd = getVal(['ddd'], '12');
         const site = getVal(['site', 'código', 'estação'], 'SITE');
         const causaDesc = getVal(['causa da perda', 'causa', 'motivo', 'descrição'], 'Sem Causa Mencionada');
-        
-        // Coluna K: Tempo Perda SLA
         const tempoMin = parseMinutes(getVal(['tempo perda sla', 'tempo perda', 'tempo', 'atraso']));
 
-        // Coluna L: Análise (Justificado vs Pendente)
         const analiseVal = getVal(['análise', 'analise', 'status', 'tratativa'], 'Pendente');
         const isJustificado = analiseVal.toLowerCase().includes('justificad') || analiseVal.toLowerCase().includes('ok') || analiseVal.toLowerCase().includes('sim');
 
-        // Coluna M: Segmento / Classificação da Causa
         let causaClassificada = getVal(['segmento', 'classificação', 'motivo final']);
-        if (!causaClassificada) causaClassificada = causaDesc !== 'Sem Causa Mencionada' ? causaDesc : 'Sem Classificação';
+        if (!causaClassificada || causaClassificada.trim() === '') causaClassificada = 'Sem Classificação';
 
-        // Data e Semana
-        const rawDataStr = getVal(['data', 'dt_evento', 'data_abertura'], '01/10/2026');
-        const semana = getVal(['semana', 'sem'], `Semana 40`);
+        // Mapeamento Fixa vs Móvel a partir da tecnologia/regional/site
+        const tipoRedeRaw = getVal(['rede', 'tecnologia', 'tipo de rede', 'móvel', 'fixa']);
+        let tipoRede = 'Móvel';
+        if (tipoRedeRaw.toLowerCase().includes('fixa') || causaClassificada.toLowerCase().includes('fibra') || causaClassificada.toLowerCase().includes('re') || ddd.includes('PAA') || ddd.includes('CAS')) {
+          tipoRede = 'Fixa';
+        } else if (site.length === 3 && !site.startsWith('1')) {
+          tipoRede = 'Móvel';
+        }
 
-        let mesExtenso = getVal(['mês', 'mes']);
-        if (!mesExtenso || mesExtenso.length < 3) {
-          if (rawDataStr.includes('/') || rawDataStr.includes('-')) {
-            let parts = rawDataStr.replace(/-/g, '/').split('/');
-            if (parts.length >= 2) {
-              let mIdx = parseInt(parts[1]) - 1;
-              let yVal = parts[2] ? parts[2].substring(0, 4) : '2026';
-              if (mIdx >= 0 && mIdx < 12) {
-                mesExtenso = `${NOME_MESES[mIdx]}/${yVal}`;
-              }
+        // Data e Semana ISO 8601
+        const rawDataStr = getVal(['data', 'dt_evento', 'data_abertura'], '09/10/2026');
+        let semanaCalculada = '';
+        let mesExtenso = '';
+
+        if (rawDataStr.includes('/') || rawDataStr.includes('-')) {
+          let parts = rawDataStr.replace(/-/g, '/').split('/');
+          if (parts.length >= 3) {
+            let day = parseInt(parts[0]) || 1;
+            let month = parseInt(parts[1]) - 1;
+            let year = parseInt(parts[2]) || 2026;
+            
+            if (month >= 0 && month < 12) {
+              let dObj = new Date(year, month, day);
+              let wNum = getISOWeekNumber(dObj);
+              semanaCalculada = `Semana ${wNum}`;
+              mesExtenso = `${NOME_MESES[month]}/${year}`;
             }
           }
+        }
+
+        if (!semanaCalculada) {
+          semanaCalculada = getVal(['semana', 'sem'], 'Semana 41');
         }
         if (!mesExtenso) mesExtenso = 'Outubro/2026';
 
         return {
           id: evento,
           data: rawDataStr,
-          semana,
+          semana: semanaCalculada,
           mes: mesExtenso,
           ddd: `DDD ${ddd.replace('DDD', '').trim()}`,
           site,
@@ -649,6 +677,7 @@
           segmento: causaClassificada,
           causa: causaClassificada,
           causaDesc,
+          tipoRede,
           tempoMin,
           status: isJustificado ? 'Justificado' : 'Pendente'
         };
@@ -693,6 +722,7 @@
 
     function applyFilters() {
       const mesVal = document.getElementById('filter-mes').value;
+      const tipoRedeVal = document.getElementById('filter-tipo-rede').value;
       const segVal = document.getElementById('filter-segmento').value;
       const coordVal = document.getElementById('filter-coordenador').value;
       const dddVal = document.getElementById('filter-ddd').value;
@@ -701,6 +731,7 @@
 
       filteredData = parsedData.filter(item => {
         const matchMes = mesVal === "ALL" || item.mes === mesVal;
+        const matchRede = tipoRedeVal === "ALL" || item.tipoRede === tipoRedeVal;
         const matchSeg = segVal === "ALL" || item.segmento === segVal;
         const matchCoord = coordVal === "ALL" || item.coordenador === coordVal;
         const matchDDD = dddVal === "ALL" || item.ddd === dddVal;
@@ -712,7 +743,7 @@
           item.causaDesc.toLowerCase().includes(searchVal) ||
           item.coordenador.toLowerCase().includes(searchVal);
 
-        return matchMes && matchSeg && matchCoord && matchStatus && matchSearch;
+        return matchMes && matchRede && matchSeg && matchCoord && matchStatus && matchSearch;
       });
 
       updateKPIs();
@@ -725,6 +756,7 @@
 
     function resetFilters() {
       document.getElementById('filter-mes').value = mesesExistentes.length > 0 ? mesesExistentes[mesesExistentes.length - 1] : "ALL";
+      document.getElementById('filter-tipo-rede').value = "ALL";
       document.getElementById('filter-segmento').value = "ALL";
       document.getElementById('filter-coordenador').value = "ALL";
       document.getElementById('filter-ddd').value = "ALL";
@@ -772,31 +804,31 @@
         return;
       }
 
-      const segCounts = {};
-      filteredData.forEach(d => segCounts[d.segmento] = (segCounts[d.segmento] || 0) + 1);
-      const topSeg = Object.entries(segCounts).sort((a,b) => b[1] - a[1])[0];
-      const segPerc = ((topSeg[1] / filteredData.length)*100).toFixed(1);
+      const movelCount = filteredData.filter(d => d.tipoRede === 'Móvel').length;
+      const fixaCount = filteredData.filter(d => d.tipoRede === 'Fixa').length;
+      const movelPerc = ((movelCount / filteredData.length)*100).toFixed(1);
+      const fixaPerc = ((fixaCount / filteredData.length)*100).toFixed(1);
 
       document.getElementById('insight-segmento').innerHTML = 
-        `No período selecionado, a classificação <strong>"${topSeg[0]}"</strong> lidera com <strong>${topSeg[1]} TAs</strong> (${segPerc}% do período).`;
+        `Distribuição de rede no período: <strong>Móvel (${movelCount} TAs - ${movelPerc}%)</strong> | <strong>Fixa (${fixaCount} TAs - ${fixaPerc}%)</strong>.`;
 
       const causaCounts = {};
       filteredData.forEach(d => causaCounts[d.causa] = (causaCounts[d.causa] || 0) + 1);
       const topCausa = Object.entries(causaCounts).sort((a,b) => b[1] - a[1])[0];
 
       document.getElementById('insight-causa').innerHTML = 
-        `A principal causa classificada na Coluna M foi <strong>"${topCausa[0]}"</strong>, acumulando <strong>${topCausa[1]} ocorrências</strong>.`;
+        `A principal causa de perda identificada foi <strong>"${topCausa[0]}"</strong>, acumulando <strong>${topCausa[1]} ocorrências</strong>.`;
 
       const justCount = filteredData.filter(d => d.status === 'Justificado').length;
       const justPerc = ((justCount / filteredData.length)*100).toFixed(1);
       const pendCount = filteredData.length - justCount;
 
       document.getElementById('insight-tratativa').innerHTML = 
-        `Conforme Coluna L: <strong>${justPerc}% das TAs (${justCount})</strong> estão Justificadas. Restam <strong>${pendCount} Pendentes</strong>.`;
+        `<strong>${justPerc}% das TAs (${justCount})</strong> foram justificadas. Restam <strong>${pendCount} pendentes</strong> de tratativa.`;
     }
 
     function renderCharts() {
-      // 1. EVOLUÇÃO SEMANAL (4 ÚLTIMAS SEMANAS + SEMANA ATUAL)
+      // 1. EVOLUÇÃO SEMANAL (ÚLTIMAS 4 SEMANAS + SEMANA ATUAL - PADRÃO ISO 8601)
       const semanasUnicas = [...new Set(filteredData.map(d => d.semana))].filter(Boolean);
       semanasUnicas.sort((a, b) => (parseInt(a.replace(/\D/g, '')) || 0) - (parseInt(b.replace(/\D/g, '')) || 0));
       const ultimas5Semanas = semanasUnicas.slice(-5);
@@ -832,7 +864,7 @@
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
       });
 
-      // 3. RANKING DE CAUSAS DA PERDA (COLUNA M)
+      // 3. PRINCIPAIS CAUSAS DA PERDA (NOME EXATO SOLICITADO)
       const causaCounts = {};
       filteredData.forEach(d => causaCounts[d.causa] = (causaCounts[d.causa] || 0) + 1);
       const sortedCausas = Object.entries(causaCounts).sort((a,b) => b[1] - a[1]).slice(0, 5);
@@ -847,7 +879,7 @@
         options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
       });
 
-      // 4. OCORRÊNCIAS POR DDD (VERMELHO NO MAIOR OFENSOR)
+      // 4. OCORRÊNCIAS POR DDD
       const dddCounts = {};
       filteredData.forEach(d => dddCounts[d.ddd] = (dddCounts[d.ddd] || 0) + 1);
       
@@ -868,7 +900,7 @@
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
       });
 
-      // 5. STATUS DE TRATATIVAS (COLUNA L)
+      // 5. STATUS DA ANÁLISE
       const justCount = filteredData.filter(d => d.status === 'Justificado').length;
       const pendCount = filteredData.length - justCount;
       const tratCtx = document.getElementById('chart-tratativas').getContext('2d');
@@ -882,20 +914,25 @@
         options: { responsive: true, maintainAspectRatio: false, cutout: '60%' }
       });
 
-      // 6. TOP 10 PERDAS POR SEGMENTO (COLUNA M)
-      const segCounts = {};
-      filteredData.forEach(d => segCounts[d.segmento] = (segCounts[d.segmento] || 0) + 1);
-      const sortedSegs = Object.entries(segCounts).sort((a,b) => b[1] - a[1]).slice(0, 10);
+      // 6. TIPO DE REDE (FIXA E MÓVEL COM QTD E %)
+      const movelCount = filteredData.filter(d => d.tipoRede === 'Móvel').length;
+      const fixaCount = filteredData.filter(d => d.tipoRede === 'Fixa').length;
+      const totalTAs = filteredData.length || 1;
+      const movelPerc = ((movelCount / totalTAs) * 100).toFixed(1);
+      const fixaPerc = ((fixaCount / totalTAs) * 100).toFixed(1);
 
-      const segCtx = document.getElementById('chart-segmentos').getContext('2d');
-      if (chartSegmentosInst) chartSegmentosInst.destroy();
-      chartSegmentosInst = new Chart(segCtx, {
+      document.getElementById('lbl-tipo-rede-summary').innerHTML = 
+        `Móvel: <strong>${movelCount} (${movelPerc}%)</strong> | Fixa: <strong>${fixaCount} (${fixaPerc}%)</strong>`;
+
+      const redeCtx = document.getElementById('chart-tipo-rede').getContext('2d');
+      if (chartTipoRedeInst) chartTipoRedeInst.destroy();
+      chartTipoRedeInst = new Chart(redeCtx, {
         type: 'bar',
         data: {
-          labels: sortedSegs.map(s => s[0]),
-          datasets: [{ label: 'Qtd TAs', data: sortedSegs.map(s => s[1]), backgroundColor: '#8b5cf6', borderRadius: 4 }]
+          labels: [`Móvel (${movelCount} - ${movelPerc}%)`, `Fixa (${fixaCount} - ${fixaPerc}%)`],
+          datasets: [{ label: 'Qtd TAs', data: [movelCount, fixaCount], backgroundColor: ['#8b5cf6', '#0284c7'], borderRadius: 6 }]
         },
-        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
       });
     }
 
@@ -985,7 +1022,7 @@
       document.getElementById('rows-count').innerText = `Exibindo ${filteredData.length} registros`;
 
       if (filteredData.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="9" class="p-8 text-center text-slate-400">Nenhum registro encontrado para os filtros selecionados.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="10" class="p-8 text-center text-slate-400">Nenhum registro encontrado para os filtros selecionados.</td></tr>`;
         return;
       }
 
@@ -1007,8 +1044,9 @@
             <span class="font-bold text-sky-700 block">${row.site}</span>
             <span class="text-[10px] text-slate-400 font-mono">${row.id}</span>
           </td>
+          <td class="p-3 font-semibold text-slate-800">${row.tipoRede}</td>
           <td class="p-3 font-semibold text-slate-800">${row.coordenador}</td>
-          <td class="p-3 text-slate-600 max-w-[200px] truncate" title="${row.causaDesc}">${row.causaDesc}</td>
+          <td class="p-3 text-slate-600 max-w-[180px] truncate" title="${row.causaDesc}">${row.causaDesc}</td>
           <td class="p-3 font-medium text-slate-700">${row.segmento}</td>
           <td class="p-3 text-center font-extrabold text-rose-600">${row.tempoMin} min</td>
           <td class="p-3 text-center">${statusBadge}</td>
@@ -1030,6 +1068,7 @@
       document.getElementById('modal-ta-subtitle').innerText = `Ocorrência registrada em ${item.data} (${item.semana})`;
       document.getElementById('m-data').innerText = item.data;
       document.getElementById('m-ddd').innerText = item.ddd;
+      document.getElementById('m-rede').innerText = item.tipoRede;
       document.getElementById('m-segmento').innerText = item.segmento;
       document.getElementById('m-tempo').innerText = `${item.tempoMin} min`;
 
@@ -1045,9 +1084,9 @@
     }
 
     function exportCSV() {
-      let csv = "Evento_TA_ID;Data;Semana;Mes;DDD;Site;Coordenador;DescricaoCausa_ColJ;ClassificacaoCausa_ColM;TempoPerdaMin_ColK;Analise_ColL\n";
+      let csv = "Evento_TA_ID;Data;Semana;Mes;DDD;Site;TipoRede;Coordenador;DescricaoCausa_ColJ;ClassificacaoCausa_ColM;TempoPerdaMin_ColK;Analise_ColL\n";
       filteredData.forEach(r => {
-        csv += `${r.id};${r.data};"${r.semana}";"${r.mes}";"${r.ddd}";"${r.site}";"${r.coordenador}";"${r.causaDesc}";"${r.segmento}";${r.tempoMin};"${r.status}"\n`;
+        csv += `${r.id};${r.data};"${r.semana}";"${r.mes}";"${r.ddd}";"${r.site}";"${r.tipoRede}";"${r.coordenador}";"${r.causaDesc}";"${r.segmento}";${r.tempoMin};"${r.status}"\n`;
       });
       const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
