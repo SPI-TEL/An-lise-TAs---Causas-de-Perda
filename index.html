@@ -59,11 +59,11 @@
       </div>
     </div>
 
-    <!-- Actions -->
+    <!-- Actions e Filtro de Mês em Destaque -->
     <div class="flex items-center gap-3">
       <div class="text-right hidden sm:block">
         <p class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Última sincronização</p>
-        <p class="text-xs font-bold text-slate-200" id="clock-timestamp">Hoje às 08:43</p>
+        <p class="text-xs font-bold text-slate-200" id="clock-timestamp">--:--</p>
       </div>
 
       <button onclick="fetchGoogleSheetsData()" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold shadow-sm flex items-center gap-1.5 transition">
@@ -129,7 +129,6 @@
   <!-- KPI CARDS (TOPO) -->
   <section class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5">
     
-    <!-- Total TAs -->
     <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
       <div class="flex items-center justify-between text-slate-500">
         <span class="text-xs font-medium uppercase tracking-wider">Total TAs SLA</span>
@@ -142,7 +141,6 @@
       <p class="text-[10px] text-slate-400 mt-1">Fora do prazo SLA</p>
     </div>
 
-    <!-- Média Tempo Perda -->
     <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
       <div class="flex items-center justify-between text-slate-500">
         <span class="text-xs font-medium uppercase tracking-wider">Média Perda SLA</span>
@@ -155,7 +153,6 @@
       <p class="text-[10px] text-slate-400 mt-1">Atraso médio por TA</p>
     </div>
 
-    <!-- Site Maior Perda -->
     <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
       <div class="flex items-center justify-between text-slate-500">
         <span class="text-xs font-medium uppercase tracking-wider">Maior Perda</span>
@@ -168,7 +165,6 @@
       <p class="text-[10px] text-slate-400 mt-1">Site com maior atraso</p>
     </div>
 
-    <!-- TAs < 30min -->
     <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
       <div class="flex items-center justify-between text-slate-500">
         <span class="text-xs font-medium uppercase tracking-wider">Perda &lt; 30min</span>
@@ -181,7 +177,6 @@
       <p class="text-[10px] text-slate-400 mt-1">Pequenos desvios SLA</p>
     </div>
 
-    <!-- Justificados -->
     <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
       <div class="flex items-center justify-between text-slate-500">
         <span class="text-xs font-medium uppercase tracking-wider">Justificados</span>
@@ -194,7 +189,6 @@
       <p class="text-[10px] text-slate-400 mt-1">Tratados com justificativa</p>
     </div>
 
-    <!-- Pendentes -->
     <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
       <div class="flex items-center justify-between text-slate-500">
         <span class="text-xs font-medium uppercase tracking-wider">Pendentes</span>
@@ -209,14 +203,22 @@
 
   </section>
 
-  <!-- PAINEL DE FILTROS -->
+  <!-- PAINEL DE FILTROS COM SELEÇÃO DE MÊS -->
   <section class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-wrap items-center justify-between gap-4">
     <div class="flex flex-wrap items-center gap-3 flex-1 min-w-[280px]">
       
+      <!-- Mês Filter (Padrão: Mês Atual) -->
+      <div class="w-full sm:w-auto">
+        <label class="block text-[11px] font-bold text-sky-800 uppercase tracking-wider mb-1">Mês de Referência</label>
+        <select id="filter-mes" onchange="applyFilters()" class="w-full sm:w-48 text-xs bg-sky-50 border border-sky-300 rounded-lg p-2 font-bold text-sky-900 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+          <!-- Preenchido via JS com mês atual pré-selecionado -->
+        </select>
+      </div>
+
       <!-- Segmento Filter -->
       <div class="w-full sm:w-auto">
         <label class="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">Filtrar Segmento</label>
-        <select id="filter-segmento" onchange="applyFilters()" class="w-full sm:w-48 text-xs bg-slate-50 border border-slate-300 rounded-lg p-2 font-medium text-slate-700 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+        <select id="filter-segmento" onchange="applyFilters()" class="w-full sm:w-44 text-xs bg-slate-50 border border-slate-300 rounded-lg p-2 font-medium text-slate-700 focus:ring-2 focus:ring-sky-500 focus:outline-none">
           <option value="ALL">Todos os Segmentos</option>
         </select>
       </div>
@@ -224,7 +226,7 @@
       <!-- Coordenador Filter -->
       <div class="w-full sm:w-auto">
         <label class="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">Filtrar Coordenador</label>
-        <select id="filter-coordenador" onchange="applyFilters()" class="w-full sm:w-48 text-xs bg-slate-50 border border-slate-300 rounded-lg p-2 font-medium text-slate-700 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+        <select id="filter-coordenador" onchange="applyFilters()" class="w-full sm:w-44 text-xs bg-slate-50 border border-slate-300 rounded-lg p-2 font-medium text-slate-700 focus:ring-2 focus:ring-sky-500 focus:outline-none">
           <option value="ALL">Todos os Coordenadores</option>
         </select>
       </div>
@@ -232,7 +234,7 @@
       <!-- DDD Filter -->
       <div class="w-full sm:w-auto">
         <label class="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">Filtrar DDD</label>
-        <select id="filter-ddd" onchange="applyFilters()" class="w-full sm:w-40 text-xs bg-slate-50 border border-slate-300 rounded-lg p-2 font-medium text-slate-700 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+        <select id="filter-ddd" onchange="applyFilters()" class="w-full sm:w-36 text-xs bg-slate-50 border border-slate-300 rounded-lg p-2 font-medium text-slate-700 focus:ring-2 focus:ring-sky-500 focus:outline-none">
           <option value="ALL">Todos os DDDs</option>
         </select>
       </div>
@@ -240,7 +242,7 @@
       <!-- Status Tratativa Filter -->
       <div class="w-full sm:w-auto">
         <label class="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">Status Tratativa</label>
-        <select id="filter-status" onchange="applyFilters()" class="w-full sm:w-40 text-xs bg-slate-50 border border-slate-300 rounded-lg p-2 font-medium text-slate-700 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+        <select id="filter-status" onchange="applyFilters()" class="w-full sm:w-36 text-xs bg-slate-50 border border-slate-300 rounded-lg p-2 font-medium text-slate-700 focus:ring-2 focus:ring-sky-500 focus:outline-none">
           <option value="ALL">Todos os Status</option>
           <option value="Justificado">Justificados</option>
           <option value="Pendente">Pendentes</option>
@@ -250,7 +252,7 @@
     </div>
 
     <!-- Search Input -->
-    <div class="w-full lg:w-72">
+    <div class="w-full lg:w-64">
       <label class="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1">Busca Site / TA / Causa</label>
       <div class="relative">
         <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
@@ -259,53 +261,53 @@
     </div>
   </section>
 
-  <!-- CHARTS ROW 1: EVOLUÇÃO SEMANAL, MENSAL E RANKING DE CAUSAS -->
+  <!-- CHARTS ROW 1: EVOLUÇÃO SEMANAL (ÚLTIMAS 5 SEMANAS), EVOLUÇÃO MENSAL E RANKING CAUSAS -->
   <section class="grid grid-cols-1 lg:grid-cols-3 gap-5">
     
-    <!-- Chart 1: Evolução Semanal -->
+    <!-- Chart 1: Evolução Semanal (Últimas 5 Semanas) -->
     <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
       <div class="flex items-center justify-between mb-2">
         <div>
           <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
-            <i class="fa-solid fa-chart-line text-sky-600"></i> Evolução Semanal de TAs
+            <i class="fa-solid fa-chart-line text-sky-600"></i> Evolução Semanal (Últimas 5 Semanas)
           </h3>
-          <p class="text-[11px] text-slate-400">Volume de estouros por semana</p>
+          <p class="text-[11px] text-slate-400">Acompanhamento móvel das 5 semanas mais recentes</p>
         </div>
       </div>
       <div class="h-56 relative">
         <canvas id="chart-semanal"></canvas>
       </div>
       <div class="pt-2 text-[11px] text-slate-500 text-center border-t border-slate-100">
-        Tendência móvel semana a semana
+        Tendência semanal contínua
       </div>
     </div>
 
-    <!-- Chart 2: Evolução Mensal -->
+    <!-- Chart 2: Evolução Mensal Separada -->
     <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
       <div class="flex items-center justify-between mb-2">
         <div>
           <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
             <i class="fa-solid fa-chart-column text-indigo-600"></i> Evolução Mensal
           </h3>
-          <p class="text-[11px] text-slate-400">Acumulado mensal de indisponibilidade</p>
+          <p class="text-[11px] text-slate-400">Total de eventos separado por mês</p>
         </div>
       </div>
       <div class="h-56 relative">
         <canvas id="chart-mensal"></canvas>
       </div>
       <div class="pt-2 text-[11px] text-slate-500 text-center border-t border-slate-100">
-        Comparativo acumulado dos meses
+        Comparativo entre os meses
       </div>
     </div>
 
-    <!-- Chart 3: Ranking de Causa da Perda (Segmento / Fator) -->
+    <!-- Chart 3: Ranking de Causa da Perda -->
     <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
       <div class="flex items-center justify-between mb-2">
         <div>
           <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
-            <i class="fa-solid fa-[#chart-bar] fa-chart-bar text-rose-500"></i> Principais Causas de Perda
+            <i class="fa-solid fa-[#chart-bar] fa-chart-bar text-rose-500"></i> Principais Causas da Perda
           </h3>
-          <p class="text-[11px] text-slate-400">Ranking dos fatores de maior impacto</p>
+          <p class="text-[11px] text-slate-400">Ranking dos fatores causadores de atraso</p>
         </div>
       </div>
       <div class="h-56 relative">
@@ -318,17 +320,17 @@
 
   </section>
 
-  <!-- CHARTS ROW 2: DISTRIBUIÇÃO POR DDD, TRATATIVAS E SEGMENTOS -->
+  <!-- CHARTS ROW 2: OCORRÊNCIAS POR DDD (VERMELHO NO OFENSOR), TRATATIVAS E TOP 10 SEGMENTOS -->
   <section class="grid grid-cols-1 lg:grid-cols-3 gap-5">
     
-    <!-- Chart 4: Ocorrências por DDD -->
+    <!-- Chart 4: Ocorrências por DDD (Com destaque em vermelho para o maior ofensor) -->
     <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
       <div class="flex items-center justify-between mb-2">
         <div>
           <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
             <i class="fa-solid fa-map-pin text-emerald-600"></i> Ocorrências por DDD
           </h3>
-          <p class="text-[11px] text-slate-400">Distribuição geográfica nos DDDs (12 a 19)</p>
+          <p class="text-[11px] text-slate-400">Destaque em <span class="text-rose-600 font-bold">vermelho</span> para o maior ofensor</p>
         </div>
       </div>
       <div class="h-56 relative">
@@ -336,7 +338,7 @@
       </div>
     </div>
 
-    <!-- Chart 5: Status de Tratativas (Justificados vs Pendentes) -->
+    <!-- Chart 5: Status de Tratativas -->
     <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
       <div class="flex items-center justify-between mb-2">
         <div>
@@ -351,14 +353,14 @@
       </div>
     </div>
 
-    <!-- Chart 6: Volume por Segmento -->
+    <!-- Chart 6: Top 10 Perdas por Segmento -->
     <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
       <div class="flex items-center justify-between mb-2">
         <div>
           <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5">
-            <i class="fa-solid fa-layer-group text-purple-600"></i> Impacto por Segmento
+            <i class="fa-solid fa-layer-group text-purple-600"></i> Top 10 Perdas por Segmento
           </h3>
-          <p class="text-[11px] text-slate-400">Volume de TAs agrupado por tecnologia / área</p>
+          <p class="text-[11px] text-slate-400">Ranking dos 10 segmentos de maior impacto</p>
         </div>
       </div>
       <div class="h-56 relative">
@@ -368,17 +370,17 @@
 
   </section>
 
-  <!-- SECTION: SITES OFENSORES (TOP 10) & RESUMO POR COORDENADOR -->
+  <!-- SECTION: SITES OFENSORES (TOP 10) & RESUMO POR COORDENADOR (COM RANKING) -->
   <section class="grid grid-cols-1 lg:grid-cols-12 gap-5">
     
-    <!-- Top 10 Sites Ofensores -->
+    <!-- Top 10 Sites Ofensores (Ordenado por Qtd TAs e depois Tempo) -->
     <div class="lg:col-span-6 bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm flex flex-col justify-between">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
         <div>
           <h3 class="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
-            <i class="fa-solid fa-skull-crossbones text-rose-500"></i> Top 10 Sites Ofensores (Perda SLA)
+            <i class="fa-solid fa-skull-crossbones text-rose-500"></i> Top 10 Sites Ofensores
           </h3>
-          <p class="text-[11px] text-slate-400">Estações com maior reincidência de atrasos</p>
+          <p class="text-[11px] text-slate-400">Ordenado por mais TAs e depois por Tempo de atraso</p>
         </div>
         <span class="text-[10px] font-semibold text-rose-700 bg-rose-50 px-2 py-0.5 rounded border border-rose-200">Ranking Crítico</span>
       </div>
@@ -390,7 +392,7 @@
               <th class="p-2">Pos.</th>
               <th class="p-2">Código / Site</th>
               <th class="p-2">DDD</th>
-              <th class="p-2 text-center">Qtd TAs</th>
+              <th class="p-2 text-center font-bold text-rose-700">Qtd TAs</th>
               <th class="p-2 text-right">Tempo Acumulado</th>
             </tr>
           </thead>
@@ -401,14 +403,14 @@
       </div>
     </div>
 
-    <!-- Desempenho por Coordenador -->
+    <!-- Acompanhamento por Coordenador com Ranking por Qtd de TAs -->
     <div class="lg:col-span-6 bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm flex flex-col justify-between">
       <div class="flex items-center justify-between pb-3 border-b border-slate-100">
         <div>
           <h3 class="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
             <i class="fa-solid fa-user-tie text-sky-600"></i> Acompanhamento por Coordenador
           </h3>
-          <p class="text-[11px] text-slate-400">Volume de TAs e taxa de tratativa de justificativas</p>
+          <p class="text-[11px] text-slate-400">Ranking ordenado por quantidade de TAs com estouro de SLA</p>
         </div>
         <span class="text-[10px] font-semibold text-sky-700 bg-sky-50 px-2 py-0.5 rounded border border-sky-200">Gestão SPI</span>
       </div>
@@ -417,8 +419,9 @@
         <table class="w-full text-xs text-left border-collapse">
           <thead>
             <tr class="bg-slate-50 text-slate-500 font-semibold uppercase text-[10px] border-b border-slate-200">
+              <th class="p-2 text-center">Rank</th>
               <th class="p-2">Coordenador</th>
-              <th class="p-2 text-center">Qtd TAs</th>
+              <th class="p-2 text-center font-bold text-sky-700">Qtd TAs</th>
               <th class="p-2 text-center">Média Atraso</th>
               <th class="p-2 text-center">% Justificados</th>
               <th class="p-2 text-center">Status</th>
@@ -473,7 +476,7 @@
     </div>
   </section>
 
-  <!-- MODAL DE DETALHES DA TA -->
+  <!-- MODAL DE DETALHES -->
   <div id="detail-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl max-w-xl w-full shadow-2xl border border-slate-200 overflow-hidden">
       <div class="bg-[#0f172a] text-white p-4 flex items-center justify-between">
@@ -518,7 +521,6 @@
           <h4 class="font-bold text-slate-800 text-xs mb-1">Status da Justificativa & Responsável</h4>
           <p class="text-slate-700"><strong>Coordenador:</strong> <span id="m-coordenador">--</span></p>
           <p class="text-slate-700 mt-1"><strong>Status Tratativa:</strong> <span id="m-status-tratative">--</span></p>
-          <p class="text-slate-500 italic mt-2" id="m-obs">Sem observações adicionais.</p>
         </div>
       </div>
 
@@ -528,13 +530,15 @@
     </div>
   </div>
 
-  <!-- JAVASCRIPT: PAPAPARSE, MAPEAMENTO DE COLUNAS & GRÁFICOS -->
+  <!-- JAVASCRIPT: PROCESSAMENTO DAS REGRAS SOLICITADAS -->
   <script>
     const GOOGLE_SHEETS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQKGyoNQrVUBIbfOwpUMsmvPgvPOgSPF-7BaORqi-8JmNoTHVkWXuBk20vBpc29MaNIFXz56_McLbi9/pub?gid=134770159&single=true&output=csv';
 
     let rawData = [];
     let parsedData = [];
     let filteredData = [];
+    let mesesExistentes = [];
+    let mesSelecionado = '';
 
     // INSTÂNCIAS DE GRÁFICOS
     let chartSemanalInst = null;
@@ -548,7 +552,6 @@
       fetchGoogleSheetsData();
     });
 
-    // BUSCA DE DADOS
     function fetchGoogleSheetsData() {
       const bannerText = document.getElementById('status-text');
       const icon = document.getElementById('status-icon');
@@ -567,7 +570,7 @@
             
             icon.className = "fa-solid fa-circle-check text-emerald-600";
             bannerText.innerHTML = `<strong>Sucesso:</strong> Base sincronizada com ${parsedData.length} registros de TAs!`;
-            document.getElementById('clock-timestamp').innerText = `Hoje às ${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
+            document.getElementById('clock-timestamp').innerText = `${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
           } else {
             showError("A planilha retornou vazia ou sem estrutura reconhecida.");
             useFallbackMockData();
@@ -585,7 +588,6 @@
       document.getElementById('status-text').innerHTML = `<strong>Atenção:</strong> ${msg}`;
     }
 
-    // PROCESSAMENTO E AUTO-DETECÇÃO DE COLUNAS DA PLANILHA
     function processRawData(rows) {
       parsedData = rows.map((r, index) => {
         const getVal = (possibleKeys, defaultVal = '') => {
@@ -610,13 +612,13 @@
         };
 
         const taId = getVal(['ta', 'ticket', 'os', 'incidente', 'id', 'número'], `TA-2026-${1000 + index}`);
-        const data = getVal(['data'], `10/10/2026`);
-        const semana = getVal(['semana', 'sem'], `Semana ${40 + (index % 4)}`);
+        const data = getVal(['data'], `2026-10-10`);
+        const semana = getVal(['semana', 'sem'], `Semana ${38 + (index % 5)}`);
         const mes = getVal(['mês', 'mes'], `Outubro/2026`);
         const ddd = getVal(['ddd', 'regional', 'uf'], `DDD ${12 + (index % 8)}`);
-        const site = getVal(['site', 'código', 'cod site', 'estação'], `SITE-${100 + (index % 15)}`);
+        const site = getVal(['site', 'código', 'cod site', 'estação'], `SITE-${100 + (index % 12)}`);
         const coordenador = getVal(['coordenador', 'gestor', 'coord'], ['Roberto Carlos', 'Matheus Mello', 'Silvio Kowaski', 'Márcio Fortes', 'Fábio Toshio'][index % 5]);
-        const segmento = getVal(['segmento', 'área', 'area', 'tipo'], ['Móvel', 'Fixa', 'Infraestrutura', 'Transmissão', 'B2B'][index % 5]);
+        const segmento = getVal(['segmento', 'área', 'area', 'tipo'], ['Móvel', 'Fixa', 'Infraestrutura', 'Transmissão', 'B2B', 'Gpon', 'Core', 'Voz', 'IP', 'Rede Externa', 'Data Center', 'Rádio'][index % 12]);
         const causa = getVal(['causa', 'motivo', 'ofensor', 'origem', 'classificação'], ['Acesso Negado', 'Falta de Energia', 'Aguardando Peça', 'Vandalismo/Furto', 'Vistoria Concessionária'][index % 5]);
         const tempoMin = parseMinutes(getVal(['tempo', 'atraso', 'duracao', 'horas', 'minutos', 'sla'], String((index % 9 + 1) * 25)));
         
@@ -638,61 +640,79 @@
         };
       });
 
+      extractMesesExistentes();
       populateFilters();
       applyFilters();
     }
 
-    // CARREGAR DADOS MOCK CASO O LINK PRECISE DE AJUSTE DE ESTRUTURA
     function useFallbackMockData() {
       const mockRows = [];
-      const segmentos = ['Móvel', 'Fixa', 'Infraestrutura', 'Transmissão', 'B2B'];
+      const segmentos = ['Móvel', 'Fixa', 'Infraestrutura', 'Transmissão', 'B2B', 'GPON', 'Core IP', 'Rede Externa', 'Rádio PTP', 'Voz NGT'];
       const causas = ['Falta de Energia Concessionária', 'Acesso Negado pelo Proprietário', 'Furto de Cabeamento', 'Aguardando Peça em Trânsito', 'Falha Fibra Subterrânea'];
       const coords = ['Silvio Kowaski', 'Matheus Mello', 'Roberto Carlos', 'Márcio Fortes', 'Fábio Toshio'];
       const ddds = ['DDD 19', 'DDD 12', 'DDD 13', 'DDD 14', 'DDD 15', 'DDD 16', 'DDD 17', 'DDD 18'];
 
-      for (let i = 1; i <= 45; i++) {
+      for (let i = 1; i <= 60; i++) {
         mockRows.push({
           id: `TA-2026-${1000 + i}`,
           data: `2026-10-0${(i % 9) + 1}`,
-          semana: `Semana ${40 + (i % 3)}`,
-          mes: `Outubro/2026`,
+          semana: `Semana ${37 + (i % 5)}`,
+          mes: i > 30 ? `Outubro/2026` : `Setembro/2026`,
           ddd: ddds[i % ddds.length],
-          site: `CPS-${String((i % 10) + 1).padStart(3, '0')}`,
+          site: `CPS-${String((i % 12) + 1).padStart(3, '0')}`,
           coordenador: coords[i % coords.length],
           segmento: segmentos[i % segmentos.length],
           causa: causas[i % causas.length],
-          tempoMin: (i % 12 + 1) * 20,
+          tempoMin: (i % 10 + 1) * 25,
           status: i % 3 === 0 ? 'Pendente' : 'Justificado'
         });
       }
 
       parsedData = mockRows;
+      extractMesesExistentes();
       populateFilters();
       applyFilters();
     }
 
-    // POPULAR SELECTS DE FILTROS
+    // EXTRAI OS MESES EXISTENTES E SELECIONA O MAIS RECENTE COMO PADRÃO
+    function extractMesesExistentes() {
+      mesesExistentes = [...new Set(parsedData.map(d => d.mes))].filter(Boolean);
+      if (mesesExistentes.length > 0) {
+        mesSelecionado = mesesExistentes[mesesExistentes.length - 1]; // Padrão: Mês atual/último
+      }
+    }
+
     function populateFilters() {
+      const selMes = document.getElementById('filter-mes');
       const selSeg = document.getElementById('filter-segmento');
       const selCoord = document.getElementById('filter-coordenador');
       const selDDD = document.getElementById('filter-ddd');
 
-      const segmentos = [...new Set(parsedData.map(d => d.segmento))].filter(Boolean);
-      const coords = [...new Set(parsedData.map(d => d.coordenador))].filter(Boolean);
-      const ddds = [...new Set(parsedData.map(d => d.ddd))].filter(Boolean);
+      // Populate Mês
+      selMes.innerHTML = '';
+      mesesExistentes.forEach(m => {
+        selMes.innerHTML += `<option value="${m}">${m}</option>`;
+      });
+      if (mesSelecionado) selMes.value = mesSelecionado;
 
+      // Populate Segmentos
+      const segmentos = [...new Set(parsedData.map(d => d.segmento))].filter(Boolean);
       selSeg.innerHTML = '<option value="ALL">Todos os Segmentos</option>';
       segmentos.forEach(s => selSeg.innerHTML += `<option value="${s}">${s}</option>`);
 
+      // Populate Coordenadores
+      const coords = [...new Set(parsedData.map(d => d.coordenador))].filter(Boolean);
       selCoord.innerHTML = '<option value="ALL">Todos os Coordenadores</option>';
       coords.forEach(c => selCoord.innerHTML += `<option value="${c}">${c}</option>`);
 
+      // Populate DDDs
+      const ddds = [...new Set(parsedData.map(d => d.ddd))].filter(Boolean);
       selDDD.innerHTML = '<option value="ALL">Todos os DDDs</option>';
       ddds.forEach(d => selDDD.innerHTML += `<option value="${d}">${d}</option>`);
     }
 
-    // APLICAR FILTROS
     function applyFilters() {
+      const mesVal = document.getElementById('filter-mes').value;
       const segVal = document.getElementById('filter-segmento').value;
       const coordVal = document.getElementById('filter-coordenador').value;
       const dddVal = document.getElementById('filter-ddd').value;
@@ -700,6 +720,7 @@
       const searchVal = document.getElementById('search-input').value.toLowerCase().trim();
 
       filteredData = parsedData.filter(item => {
+        const matchMes = !mesVal || item.mes === mesVal;
         const matchSeg = segVal === "ALL" || item.segmento === segVal;
         const matchCoord = coordVal === "ALL" || item.coordenador === coordVal;
         const matchDDD = dddVal === "ALL" || item.ddd === dddVal;
@@ -710,7 +731,7 @@
           item.causa.toLowerCase().includes(searchVal) ||
           item.coordenador.toLowerCase().includes(searchVal);
 
-        return matchSeg && matchCoord && matchDDD && matchStatus && matchSearch;
+        return matchMes && matchSeg && matchCoord && matchStatus && matchSearch;
       });
 
       updateKPIs();
@@ -730,7 +751,6 @@
       applyFilters();
     }
 
-    // ATUALIZAR KPIS
     function updateKPIs() {
       const total = filteredData.length;
       document.getElementById('kpi-total-tas').innerText = total;
@@ -739,7 +759,6 @@
       const mediaTempo = total > 0 ? Math.round(totalTempo / total) : 0;
       document.getElementById('kpi-media-tempo').innerText = `${mediaTempo} min`;
 
-      // Maior site
       if (filteredData.length > 0) {
         const sortedTempo = [...filteredData].sort((a,b) => b.tempoMin - a.tempoMin);
         document.getElementById('kpi-max-site').innerText = sortedTempo[0].site;
@@ -749,12 +768,10 @@
         document.getElementById('kpi-max-tempo').innerText = '0 min';
       }
 
-      // Perda < 30min
       const count30m = filteredData.filter(d => d.tempoMin < 30).length;
       document.getElementById('kpi-count-30m').innerText = count30m;
       document.getElementById('kpi-perc-30m').innerText = total > 0 ? `${((count30m / total)*100).toFixed(1)}%` : '0%';
 
-      // Justificados vs Pendentes
       const justCount = filteredData.filter(d => d.status === 'Justificado').length;
       const pendCount = total - justCount;
 
@@ -765,46 +782,49 @@
       document.getElementById('kpi-perc-pend').innerText = total > 0 ? `${((pendCount / total)*100).toFixed(1)}%` : '0%';
     }
 
-    // QUADRO DE INSIGHTS E DESTAQUES AUTOMÁTICOS
     function renderInsights() {
       if (filteredData.length === 0) {
-        document.getElementById('insight-segmento').innerHTML = "Sem dados suficientes para análise.";
-        document.getElementById('insight-causa').innerHTML = "Sem dados suficientes para análise.";
-        document.getElementById('insight-tratativa').innerHTML = "Sem dados suficientes para análise.";
+        document.getElementById('insight-segmento').innerHTML = "Sem dados suficientes no mês selecionado.";
+        document.getElementById('insight-causa').innerHTML = "Sem dados suficientes no mês selecionado.";
+        document.getElementById('insight-tratativa').innerHTML = "Sem dados suficientes no mês selecionado.";
         return;
       }
 
-      // 1. Segmento Ofensor
       const segCounts = {};
       filteredData.forEach(d => segCounts[d.segmento] = (segCounts[d.segmento] || 0) + 1);
       const topSeg = Object.entries(segCounts).sort((a,b) => b[1] - a[1])[0];
       const segPerc = ((topSeg[1] / filteredData.length)*100).toFixed(1);
 
       document.getElementById('insight-segmento').innerHTML = 
-        `O segmento <strong>${topSeg[0]}</strong> lidera as ocorrências com <strong>${topSeg[1]} TAs</strong> (${segPerc}% do total da base analisada).`;
+        `No mês selecionado, o segmento <strong>${topSeg[0]}</strong> é o principal ofensor com <strong>${topSeg[1]} TAs</strong> (${segPerc}% do período).`;
 
-      // 2. Causa Raiz Predominante
       const causaCounts = {};
       filteredData.forEach(d => causaCounts[d.causa] = (causaCounts[d.causa] || 0) + 1);
       const topCausa = Object.entries(causaCounts).sort((a,b) => b[1] - a[1])[0];
 
       document.getElementById('insight-causa').innerHTML = 
-        `A principal causa de perda de SLA identificada foi <strong>"${topCausa[0]}"</strong>, responsável por <strong>${topCausa[1]} estouros</strong>.`;
+        `A maior causa de atraso de SLA é <strong>"${topCausa[0]}"</strong>, acumulando <strong>${topCausa[1]} ocorrências</strong>.`;
 
-      // 3. Efetividade de Tratativa
       const justCount = filteredData.filter(d => d.status === 'Justificado').length;
       const justPerc = ((justCount / filteredData.length)*100).toFixed(1);
       const pendCount = filteredData.length - justCount;
 
       document.getElementById('insight-tratativa').innerHTML = 
-        `Atualmente, <strong>${justPerc}% das TAs (${justCount})</strong> possuem justificativa registrada. Restam <strong>${pendCount} TAs pendentes</strong> de tratativa.`;
+        `<strong>${justPerc}% das TAs (${justCount})</strong> foram justificadas no mês. Restam <strong>${pendCount} pendentes</strong>.`;
     }
 
-    // RENDERIZAR GRÁFICOS
     function renderCharts() {
-      // 1. Evolução Semanal
+      // 1. EVOLUÇÃO SEMANAL (FILTRAR SOMENTE ÚLTIMAS 5 SEMANAS REAIS DA BASE)
+      const semanasUnicas = [...new Set(filteredData.map(d => d.semana))].filter(Boolean);
+      semanasUnicas.sort((a, b) => (parseInt(a.replace(/\D/g, '')) || 0) - (parseInt(b.replace(/\D/g, '')) || 0));
+      const ultimas5Semanas = semanasUnicas.slice(-5);
+
       const semCounts = {};
-      filteredData.forEach(d => semCounts[d.semana] = (semCounts[d.semana] || 0) + 1);
+      ultimas5Semanas.forEach(s => semCounts[s] = 0);
+      filteredData.forEach(d => {
+        if (semCounts[d.semana] !== undefined) semCounts[d.semana]++;
+      });
+
       const semCtx = document.getElementById('chart-semanal').getContext('2d');
       if (chartSemanalInst) chartSemanalInst.destroy();
       chartSemanalInst = new Chart(semCtx, {
@@ -816,9 +836,9 @@
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
       });
 
-      // 2. Evolução Mensal
+      // 2. EVOLUÇÃO MENSAL (HISTÓRICO MÊS A MÊS DA BASE COMPLETA)
       const mesCounts = {};
-      filteredData.forEach(d => mesCounts[d.mes] = (mesCounts[d.mes] || 0) + 1);
+      parsedData.forEach(d => mesCounts[d.mes] = (mesCounts[d.mes] || 0) + 1);
       const mesCtx = document.getElementById('chart-mensal').getContext('2d');
       if (chartMensalInst) chartMensalInst.destroy();
       chartMensalInst = new Chart(mesCtx, {
@@ -830,7 +850,7 @@
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
       });
 
-      // 3. Ranking de Causas
+      // 3. RANKING DE CAUSAS DA PERDA
       const causaCounts = {};
       filteredData.forEach(d => causaCounts[d.causa] = (causaCounts[d.causa] || 0) + 1);
       const sortedCausas = Object.entries(causaCounts).sort((a,b) => b[1] - a[1]).slice(0, 5);
@@ -845,21 +865,29 @@
         options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
       });
 
-      // 4. Ocorrências por DDD
+      // 4. OCORRÊNCIAS POR DDD (DESTAQUE EM VERMELHO PARA O DDD COM MAIS PERDAS)
       const dddCounts = {};
       filteredData.forEach(d => dddCounts[d.ddd] = (dddCounts[d.ddd] || 0) + 1);
+      
+      const dddLabels = Object.keys(dddCounts);
+      const dddValues = Object.values(dddCounts);
+      const maxDDDVal = Math.max(...dddValues, 0);
+
+      // Aplica cor vermelha (#f43f5e) na barra do DDD com maior valor, e verde (#10b981) nos demais
+      const dddColors = dddValues.map(val => val === maxDDDVal && val > 0 ? '#f43f5e' : '#10b981');
+
       const dddCtx = document.getElementById('chart-ddd').getContext('2d');
       if (chartDDDInst) chartDDDInst.destroy();
       chartDDDInst = new Chart(dddCtx, {
         type: 'bar',
         data: {
-          labels: Object.keys(dddCounts),
-          datasets: [{ label: 'Qtd TAs', data: Object.values(dddCounts), backgroundColor: '#10b981', borderRadius: 4 }]
+          labels: dddLabels,
+          datasets: [{ label: 'Qtd TAs', data: dddValues, backgroundColor: dddColors, borderRadius: 4 }]
         },
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
       });
 
-      // 5. Status de Tratativas
+      // 5. STATUS DE TRATATIVAS
       const justCount = filteredData.filter(d => d.status === 'Justificado').length;
       const pendCount = filteredData.length - justCount;
       const tratCtx = document.getElementById('chart-tratativas').getContext('2d');
@@ -873,22 +901,24 @@
         options: { responsive: true, maintainAspectRatio: false, cutout: '60%' }
       });
 
-      // 6. Volume por Segmento
+      // 6. TOP 10 PERDAS POR SEGMENTO
       const segCounts = {};
       filteredData.forEach(d => segCounts[d.segmento] = (segCounts[d.segmento] || 0) + 1);
+      const sortedSegs = Object.entries(segCounts).sort((a,b) => b[1] - a[1]).slice(0, 10);
+
       const segCtx = document.getElementById('chart-segmentos').getContext('2d');
       if (chartSegmentosInst) chartSegmentosInst.destroy();
       chartSegmentosInst = new Chart(segCtx, {
         type: 'bar',
         data: {
-          labels: Object.keys(segCounts),
-          datasets: [{ label: 'Qtd TAs', data: Object.values(segCounts), backgroundColor: '#8b5cf6', borderRadius: 4 }]
+          labels: sortedSegs.map(s => s[0]),
+          datasets: [{ label: 'Qtd TAs', data: sortedSegs.map(s => s[1]), backgroundColor: '#8b5cf6', borderRadius: 4 }]
         },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+        options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
       });
     }
 
-    // TOP 10 SITES OFENSORES
+    // TOP 10 SITES OFENSORES (ORDENAR PRIMEIRO POR QTD TAs E DEPOIS POR TEMPO)
     function renderTopSites() {
       const siteMap = {};
       filteredData.forEach(d => {
@@ -899,7 +929,12 @@
         siteMap[d.site].totalTempo += d.tempoMin;
       });
 
-      const sortedSites = Object.values(siteMap).sort((a,b) => b.totalTempo - a.totalTempo).slice(0, 10);
+      // Ordenação Primária: Qtd de TAs (count), Secundária: Tempo total de Perda
+      const sortedSites = Object.values(siteMap).sort((a,b) => {
+        if (b.count !== a.count) return b.count - a.count;
+        return b.totalTempo - a.totalTempo;
+      }).slice(0, 10);
+
       const tbody = document.getElementById('tbody-top-sites');
       tbody.innerHTML = '';
 
@@ -915,14 +950,14 @@
           <td class="p-2 font-bold text-slate-800">${idx + 1}º</td>
           <td class="p-2 font-bold text-sky-700">${s.site}</td>
           <td class="p-2 text-slate-600">${s.ddd}</td>
-          <td class="p-2 text-center font-bold text-slate-800">${s.count}</td>
-          <td class="p-2 text-right font-extrabold text-rose-600">${s.totalTempo} min</td>
+          <td class="p-2 text-center font-extrabold text-rose-600">${s.count} TAs</td>
+          <td class="p-2 text-right font-bold text-slate-800">${s.totalTempo} min</td>
         `;
         tbody.appendChild(tr);
       });
     }
 
-    // RESUMO POR COORDENADOR
+    // ACOMPANHAMENTO POR COORDENADOR (COM RANKING POR QTD DE TAs)
     function renderResumoCoordenadores() {
       const coordMap = {};
       filteredData.forEach(d => {
@@ -934,16 +969,17 @@
         if (d.status === 'Justificado') coordMap[d.coordenador].justificados++;
       });
 
+      // Ordenado por Qtd de TAs Descendente
       const listCoord = Object.values(coordMap).sort((a,b) => b.count - a.count);
       const tbody = document.getElementById('tbody-coordenadores');
       tbody.innerHTML = '';
 
       if (listCoord.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">Nenhum coordenador encontrado.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400">Nenhum coordenador encontrado.</td></tr>`;
         return;
       }
 
-      listCoord.forEach(c => {
+      listCoord.forEach((c, idx) => {
         const media = Math.round(c.totalTempo / c.count);
         const percJust = Math.round((c.justificados / c.count) * 100);
         let statusClass = percJust >= 80 ? 'status-green' : (percJust >= 50 ? 'status-yellow' : 'status-red');
@@ -951,8 +987,9 @@
         const tr = document.createElement('tr');
         tr.className = "hover:bg-slate-50 border-b border-slate-100";
         tr.innerHTML = `
+          <td class="p-2 text-center font-extrabold text-amber-500">${idx + 1}º</td>
           <td class="p-2 font-bold text-slate-800">${c.coord}</td>
-          <td class="p-2 text-center font-bold text-slate-700">${c.count}</td>
+          <td class="p-2 text-center font-extrabold text-sky-700">${c.count}</td>
           <td class="p-2 text-center font-medium text-amber-600">${media} min</td>
           <td class="p-2 text-center font-bold text-emerald-600">${percJust}%</td>
           <td class="p-2 text-center"><span class="status-pill ${statusClass}"></span></td>
@@ -1006,7 +1043,6 @@
       });
     }
 
-    // MODAL DE DETALHES
     function openModal(id) {
       const item = parsedData.find(d => d.id === id);
       if (!item) return;
@@ -1029,7 +1065,6 @@
       document.getElementById('detail-modal').classList.add('hidden');
     }
 
-    // EXPORTAR CSV
     function exportCSV() {
       let csv = "TA_ID;Data;Semana;Mes;DDD;Site;Segmento;Coordenador;CausaPerda;TempoPerdaMin;StatusTratativa\n";
       filteredData.forEach(r => {
