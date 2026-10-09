@@ -184,9 +184,9 @@
       </div>
       <div class="mt-2 flex items-baseline justify-between">
         <span class="text-2xl font-extrabold text-emerald-600" id="kpi-justificados">0</span>
-        <span class="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded" id="kpi-perc-just">0%</span>
+        <span class="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded">Coluna L</span>
       </div>
-      <p class="text-[10px] text-slate-400 mt-1">Tratados com justificativa</p>
+      <p class="text-[10px] text-slate-400 mt-1">Análise Coluna L</p>
     </div>
 
     <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
@@ -196,7 +196,7 @@
       </div>
       <div class="mt-2 flex items-baseline justify-between">
         <span class="text-2xl font-extrabold text-rose-600" id="kpi-pendentes">0</span>
-        <span class="text-[11px] font-semibold text-rose-700 bg-rose-50 px-1.5 py-0.5 rounded" id="kpi-perc-pend">0%</span>
+        <span class="text-[11px] font-semibold text-rose-700 bg-rose-50 px-1.5 py-0.5 rounded">Aguardando</span>
       </div>
       <p class="text-[10px] text-slate-400 mt-1">Aguardando Análise</p>
     </div>
@@ -263,7 +263,7 @@
     </div>
   </section>
 
-  <!-- CHARTS ROW 1: EVOLUÇÃO SEMANAL, MENSAL E CAUSAS -->
+  <!-- CHARTS ROW 1 -->
   <section class="grid grid-cols-1 lg:grid-cols-3 gap-5">
     
     <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
@@ -319,7 +319,7 @@
 
   </section>
 
-  <!-- CHARTS ROW 2: OCORRÊNCIAS POR DDD, TRATATIVAS E TIPO DE REDE -->
+  <!-- CHARTS ROW 2 -->
   <section class="grid grid-cols-1 lg:grid-cols-3 gap-5">
     
     <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
@@ -369,7 +369,7 @@
 
   </section>
 
-  <!-- SECTION: SITES OFENSORES & RESUMO POR COORDENADOR -->
+  <!-- SECTION: SITES OFENSORES & COORDENADORES -->
   <section class="grid grid-cols-1 lg:grid-cols-12 gap-5">
     
     <div class="lg:col-span-6 bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm flex flex-col justify-between">
@@ -433,7 +433,7 @@
 
   </section>
 
-  <!-- TABELA TRANSACIONAL COMPLETA COM FILTROS -->
+  <!-- TABELA TRANSACIONAL -->
   <section class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden p-5 space-y-3">
     <div class="flex flex-wrap items-center justify-between gap-4 pb-3 border-b border-slate-100">
       <div>
@@ -528,7 +528,7 @@
     </div>
   </div>
 
-  <!-- JAVASCRIPT ULTRA SEGURO CONTRA BLOQUEIOS DE REDE -->
+  <!-- JAVASCRIPT REORDENADO E TESTADO -->
   <script>
     const GOOGLE_SHEETS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQKGyoNQrVUBIbfOwpUMsmvPgvPOgSPF-7BaORqi-8JmNoTHVkWXuBk20vBpc29MaNIFXz56_McLbi9/pub?gid=134770159&single=true&output=csv';
 
@@ -558,58 +558,16 @@
       return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
     }
 
-    // BUSCA ULTRA-ROBUSTA COM FALLBACK TRIPLO
-    async function fetchGoogleSheetsData() {
+    // MECANISMO DE SINCRONIZAÇÃO ORIGINAL (PAPAPARSE DIRETO)
+    function fetchGoogleSheetsData() {
       const bannerText = document.getElementById('status-text');
       const icon = document.getElementById('status-icon');
       
       icon.className = "fa-solid fa-circle-notch fa-spin text-emerald-600";
       bannerText.innerText = "Sincronizando com a Planilha Google Sheets...";
 
-      try {
-        // Tentativa 1: Fetch Nativo direto com no-cache
-        const response = await fetch(GOOGLE_SHEETS_CSV_URL + '&t=' + new Date().getTime());
-        const csvText = await response.text();
-        
-        if (csvText && csvText.length > 50) {
-          parseCsvString(csvText);
-          return;
-        }
-      } catch (e) {
-        console.warn("Fetch direto bloqueado pelo navegador. Acionando Proxy CORS...");
-      }
-
-      try {
-        // Tentativa 2: Proxy CORS Primário
-        const proxy1 = 'https://api.corsproxy.io/?' + encodeURIComponent(GOOGLE_SHEETS_CSV_URL);
-        const resProxy = await fetch(proxy1);
-        const csvProxyText = await resProxy.text();
-
-        if (csvProxyText && csvProxyText.length > 50) {
-          parseCsvString(csvProxyText);
-          return;
-        }
-      } catch (e) {
-        console.warn("Proxy 1 falhou. Tentando Proxy secundário...");
-      }
-
-      try {
-        // Tentativa 3: Proxy Secundário AllOrigins
-        const proxy2 = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(GOOGLE_SHEETS_CSV_URL);
-        const resProxy2 = await fetch(proxy2);
-        const csvText2 = await resProxy2.text();
-
-        if (csvText2 && csvText2.length > 50) {
-          parseCsvString(csvText2);
-          return;
-        }
-      } catch (e) {
-        showError("Não foi possível carregar a planilha online. Verifique sua conexão de rede.");
-      }
-    }
-
-    function parseCsvString(csvText) {
-      Papa.parse(csvText, {
+      Papa.parse(GOOGLE_SHEETS_CSV_URL, {
+        download: true,
         header: true,
         skipEmptyLines: true,
         complete: function(results) {
@@ -617,12 +575,15 @@
             rawData = results.data;
             processRawData(rawData);
             
-            document.getElementById('status-icon').className = "fa-solid fa-circle-check text-emerald-600";
-            document.getElementById('status-text').innerHTML = `<strong>Sucesso:</strong> Sincronizado com ${parsedData.length} registros de TAs!`;
+            icon.className = "fa-solid fa-circle-check text-emerald-600";
+            bannerText.innerHTML = `<strong>Sucesso:</strong> Base sincronizada com ${parsedData.length} registros de TAs!`;
             document.getElementById('clock-timestamp').innerText = `${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
           } else {
-            showError("A planilha retornou vazia ou sem estrutura de dados.");
+            showError("A planilha retornou vazia ou sem estrutura reconhecida.");
           }
+        },
+        error: function(err) {
+          showError("Erro ao conectar à Planilha Google. Verifique a publicação do link.");
         }
       });
     }
@@ -634,10 +595,11 @@
 
     function processRawData(rows) {
       parsedData = rows.map((r, index) => {
-        const getValByKeys = (possibleKeys) => {
+        // Busca flexível de campos
+        const getVal = (possibleKeys) => {
           for (let k of Object.keys(r)) {
             let lowerK = k.toLowerCase().trim();
-            if (possibleKeys.some(p => lowerK === p.toLowerCase() || lowerK.includes(p.toLowerCase()))) {
+            if (possibleKeys.some(p => lowerK.includes(p.toLowerCase()))) {
               return r[k] ? r[k].toString().trim() : '';
             }
           }
@@ -655,19 +617,19 @@
           return isNaN(n) ? 0 : Math.round(n);
         };
 
-        const evento = getValByKeys(['evento', 'ta', 'ticket', 'id']) || `EV-${3689000000 + index}`;
-        const coordenador = getValByKeys(['coordenador', 'gestor', 'coord', 'equipe']) || 'Não informado';
-        const dddRaw = getValByKeys(['ddd', 'regional', 'uf']) || '12';
-        const site = getValByKeys(['site', 'estação', 'código']) || 'SITE';
-        const causaDesc = getValByKeys(['causa da perda', 'causa', 'motivo', 'descrição']) || 'Sem Causa Mencionada';
-        const tempoMin = parseMinutes(getValByKeys(['tempo perda sla', 'tempo perda', 'tempo', 'atraso']));
+        const evento = getVal(['evento', 'ta', 'ticket', 'id']) || `EV-${3689000000 + index}`;
+        const coordenador = getVal(['coordenador', 'gestor', 'coord']) || 'Não informado';
+        const dddRaw = getVal(['ddd']) || '12';
+        const site = getVal(['site', 'estação']) || 'SITE';
+        const causaDesc = getVal(['causa da perda', 'causa', 'motivo', 'descrição']) || 'Sem Causa Mencionada';
+        const tempoMin = parseMinutes(getVal(['tempo perda sla', 'tempo perda', 'tempo', 'atraso']));
 
         // Coluna L: Análise
-        const analiseVal = getValByKeys(['análise', 'analise', 'status', 'tratativa']);
+        const analiseVal = getVal(['análise', 'analise', 'status', 'tratativa']);
         const isJustificado = analiseVal.toLowerCase().includes('justificad') || analiseVal.toLowerCase().includes('ok') || analiseVal.toLowerCase().includes('sim');
 
         // Coluna M: Segmento
-        let causaClassificada = getValByKeys(['segmento', 'classificação']);
+        let causaClassificada = getVal(['segmento', 'classificação']);
         if (!causaClassificada || causaClassificada.trim() === '') causaClassificada = 'Sem Classificação';
 
         // Tipo de Rede (Fixa x Móvel)
@@ -677,7 +639,7 @@
         }
 
         // Data e Semana ISO 8601
-        const rawDataStr = getValByKeys(['data', 'dt_evento', 'data_abertura']) || '09/10/2026';
+        const rawDataStr = getVal(['data', 'dt_evento', 'data_abertura']) || '09/10/2026';
         let semanaCalculada = '';
         let mesExtenso = '';
 
