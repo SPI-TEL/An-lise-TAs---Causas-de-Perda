@@ -528,7 +528,7 @@
     </div>
   </div>
 
-  <!-- JAVASCRIPT REORDENADO E TESTADO -->
+  <!-- JAVASCRIPT: LÓGICA ROBUSTA DE FETCH DIRETO E PARSER INTEGRADO -->
   <script>
     const GOOGLE_SHEETS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQKGyoNQrVUBIbfOwpUMsmvPgvPOgSPF-7BaORqi-8JmNoTHVkWXuBk20vBpc29MaNIFXz56_McLbi9/pub?gid=134770159&single=true&output=csv';
 
@@ -558,34 +558,50 @@
       return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
     }
 
-    // MECANISMO DE SINCRONIZAÇÃO ORIGINAL (PAPAPARSE DIRETO)
-    function fetchGoogleSheetsData() {
+    // BUSCA VIA FETCH DIRETO COM PARSEMENTO TEXTUAL SEGURO
+    async function fetchGoogleSheetsData() {
       const bannerText = document.getElementById('status-text');
       const icon = document.getElementById('status-icon');
       
       icon.className = "fa-solid fa-circle-notch fa-spin text-emerald-600";
       bannerText.innerText = "Sincronizando com a Planilha Google Sheets...";
 
-      Papa.parse(GOOGLE_SHEETS_CSV_URL, {
-        download: true,
-        header: true,
-        skipEmptyLines: true,
-        complete: function(results) {
-          if (results.data && results.data.length > 0) {
-            rawData = results.data;
-            processRawData(rawData);
-            
-            icon.className = "fa-solid fa-circle-check text-emerald-600";
-            bannerText.innerHTML = `<strong>Sucesso:</strong> Base sincronizada com ${parsedData.length} registros de TAs!`;
-            document.getElementById('clock-timestamp').innerText = `${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
-          } else {
-            showError("A planilha retornou vazia ou sem estrutura reconhecida.");
+      // Estratégia de tentativas para contornar qualquer limitação do navegador
+      const urlsToTry = [
+        GOOGLE_SHEETS_CSV_URL,
+        'https://api.corsproxy.io/?' + encodeURIComponent(GOOGLE_SHEETS_CSV_URL),
+        'https://api.allorigins.win/raw?url=' + encodeURIComponent(GOOGLE_SHEETS_CSV_URL)
+      ];
+
+      for (let targetUrl of urlsToTry) {
+        try {
+          const res = await fetch(targetUrl, { method: 'GET' });
+          if (res.ok) {
+            const csvText = await res.text();
+            if (csvText && csvText.length > 100) {
+              Papa.parse(csvText, {
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                  if (results.data && results.data.length > 0) {
+                    rawData = results.data;
+                    processRawData(rawData);
+                    
+                    icon.className = "fa-solid fa-circle-check text-emerald-600";
+                    bannerText.innerHTML = `<strong>Sucesso:</strong> Base sincronizada com ${parsedData.length} registros de TAs!`;
+                    document.getElementById('clock-timestamp').innerText = `${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
+                  }
+                }
+              });
+              return; // Sucesso, encerra as tentativas
+            }
           }
-        },
-        error: function(err) {
-          showError("Erro ao conectar à Planilha Google. Verifique a publicação do link.");
+        } catch (err) {
+          console.warn('Tentativa de conexão falhou na URL:', targetUrl);
         }
-      });
+      }
+
+      showError("Erro ao conectar à Planilha Google. Verifique se o link publicado está público.");
     }
 
     function showError(msg) {
@@ -595,7 +611,6 @@
 
     function processRawData(rows) {
       parsedData = rows.map((r, index) => {
-        // Busca flexível de campos
         const getVal = (possibleKeys) => {
           for (let k of Object.keys(r)) {
             let lowerK = k.toLowerCase().trim();
@@ -910,7 +925,7 @@
         options: { responsive: true, maintainAspectRatio: false, cutout: '60%' }
       });
 
-      // 6. TIPO DE REDE (FIXA E MÓVEL COM QTD E %)
+      // 6. TIPO DE REDE
       const movelCount = filteredData.filter(d => d.tipoRede === 'Móvel').length;
       const fixaCount = filteredData.filter(d => d.tipoRede === 'Fixa').length;
       const totalTAs = filteredData.length || 1;
@@ -1010,7 +1025,7 @@
       });
     }
 
-    // TABELA TRANSACIONAL COMPLETA
+    // TABELA TRANSACIONAL
     function renderTable() {
       const tbody = document.getElementById('table-body');
       tbody.innerHTML = '';
