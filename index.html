@@ -126,7 +126,7 @@
     </div>
   </section>
 
-  <!-- KPI CARDS (TOPO) -->
+  <!-- KPI CARDS -->
   <section class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5">
     
     <div class="bg-white p-3.5 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
@@ -203,7 +203,7 @@
 
   </section>
 
-  <!-- PAINEL DE FILTROS COM SELEÇÃO DE MÊS -->
+  <!-- PAINEL DE FILTROS -->
   <section class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-wrap items-center justify-between gap-4">
     <div class="flex flex-wrap items-center gap-3 flex-1 min-w-[280px]">
       
@@ -263,7 +263,7 @@
     </div>
   </section>
 
-  <!-- CHARTS ROW 1: EVOLUÇÃO SEMANAL (ÚLTIMAS 4 SEMANAS + ATUAL), MENSAL E CAUSAS -->
+  <!-- CHARTS ROW 1: EVOLUÇÃO SEMANAL, MENSAL E CAUSAS -->
   <section class="grid grid-cols-1 lg:grid-cols-3 gap-5">
     
     <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
@@ -300,7 +300,6 @@
       </div>
     </div>
 
-    <!-- TÍTULO ATUALIZADO CONFORME PEDIDO -->
     <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
       <div class="flex items-center justify-between mb-2">
         <div>
@@ -320,7 +319,7 @@
 
   </section>
 
-  <!-- CHARTS ROW 2: OCORRÊNCIAS POR DDD (VERMELHO NO OFENSOR), TRATATIVAS E TIPO DE REDE (FIXA E MÓVEL) -->
+  <!-- CHARTS ROW 2: OCORRÊNCIAS POR DDD, TRATATIVAS E TIPO DE REDE -->
   <section class="grid grid-cols-1 lg:grid-cols-3 gap-5">
     
     <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
@@ -351,7 +350,6 @@
       </div>
     </div>
 
-    <!-- GRÁFICO TIPO DE REDE (FIXA E MÓVEL COM QTD E %) -->
     <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
       <div class="flex items-center justify-between mb-2">
         <div>
@@ -530,9 +528,9 @@
     </div>
   </div>
 
-  <!-- JAVASCRIPT: CÁLCULO DE SEMANAS ISO 8601 E MAPA FIXA/MÓVEL -->
+  <!-- JAVASCRIPT: BUSCA PROTEGIDA CONTRA CORSE TIMEOUT -->
   <script>
-    const GOOGLE_SHEETS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQKGyoNQrVUBIbfOwpUMsmvPgvPOgSPF-7BaORqi-8JmNoTHVkWXuBk20vBpc29MaNIFXz56_McLbi9/pub?gid=134770159&single=true&output=csv';
+    const BASE_SHEETS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQKGyoNQrVUBIbfOwpUMsmvPgvPOgSPF-7BaORqi-8JmNoTHVkWXuBk20vBpc29MaNIFXz56_McLbi9/pub?gid=134770159&single=true&output=csv';
 
     let rawData = [];
     let parsedData = [];
@@ -561,6 +559,7 @@
       return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
     }
 
+    // BUSCA COM CONEXÃO DIRETA E PROXY DE CONTINGÊNCIA SE HOUVER BLOQUEIO CORS
     function fetchGoogleSheetsData() {
       const bannerText = document.getElementById('status-text');
       const icon = document.getElementById('status-icon');
@@ -568,43 +567,76 @@
       icon.className = "fa-solid fa-circle-notch fa-spin text-emerald-600";
       bannerText.innerText = "Sincronizando com a Planilha Google Sheets...";
 
-      Papa.parse(GOOGLE_SHEETS_CSV_URL, {
+      let fetchCompleted = false;
+
+      // Tentativa 1: Download Direto via PapaParse
+      Papa.parse(BASE_SHEETS_CSV_URL, {
         download: true,
         header: true,
         skipEmptyLines: true,
         complete: function(results) {
-          if (results.data && results.data.length > 0) {
+          if (!fetchCompleted && results.data && results.data.length > 0) {
+            fetchCompleted = true;
             rawData = results.data;
             processRawData(rawData);
             
             icon.className = "fa-solid fa-circle-check text-emerald-600";
             bannerText.innerHTML = `<strong>Sucesso:</strong> Base sincronizada com ${parsedData.length} registros de TAs!`;
             document.getElementById('clock-timestamp').innerText = `${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
-          } else {
-            showError("A planilha retornou vazia ou sem estrutura de cabeçalhos.");
           }
         },
         error: function(err) {
-          showError("Erro ao acessar a planilha online.");
+          if (!fetchCompleted) {
+            tryProxyFetch();
+          }
         }
       });
+
+      // Timeout de segurança: Se o PapaParse direto travar por CORS após 3 segundos, usa o Proxy
+      setTimeout(() => {
+        if (!fetchCompleted && parsedData.length === 0) {
+          tryProxyFetch();
+        }
+      }, 3000);
     }
 
-    function showError(msg) {
-      document.getElementById('status-icon').className = "fa-solid fa-circle-exclamation text-rose-600";
-      document.getElementById('status-text').innerHTML = `<strong>Atenção:</strong> ${msg}`;
+    // PROXY CONTINGÊNCIA PARA GARANTIR CONEXÃO EM QUALQUER REDE
+    function tryProxyFetch() {
+      const proxyUrl = 'https://api.corsproxy.io/?' + encodeURIComponent(BASE_SHEETS_CSV_URL);
+      fetch(proxyUrl)
+        .then(res => res.text())
+        .then(csvText => {
+          Papa.parse(csvText, {
+            header: true,
+            skipEmptyLines: true,
+            complete: function(results) {
+              if (results.data && results.data.length > 0) {
+                rawData = results.data;
+                processRawData(rawData);
+                document.getElementById('status-icon').className = "fa-solid fa-circle-check text-emerald-600";
+                document.getElementById('status-text').innerHTML = `<strong>Sucesso (Proxy):</strong> Sincronizado com ${parsedData.length} registros!`;
+                document.getElementById('clock-timestamp').innerText = `${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
+              }
+            }
+          });
+        })
+        .catch(err => {
+          document.getElementById('status-icon').className = "fa-solid fa-circle-exclamation text-rose-600";
+          document.getElementById('status-text').innerHTML = `<strong>Atenção:</strong> Erro ao sincronizar. Verifique a conexão.`;
+        });
     }
 
+    // MAPEAMENTO EXATO DAS COLUNAS
     function processRawData(rows) {
       parsedData = rows.map((r, index) => {
-        const getVal = (possibleKeys, defaultVal = '') => {
+        const getValByKeys = (possibleKeys) => {
           for (let k of Object.keys(r)) {
             let lowerK = k.toLowerCase().trim();
-            if (possibleKeys.some(p => lowerK.includes(p.toLowerCase()))) {
-              return r[k] ? r[k].toString().trim() : defaultVal;
+            if (possibleKeys.some(p => lowerK === p.toLowerCase() || lowerK.includes(p.toLowerCase()))) {
+              return r[k] ? r[k].toString().trim() : '';
             }
           }
-          return defaultVal;
+          return '';
         };
 
         const parseMinutes = (valStr) => {
@@ -618,30 +650,29 @@
           return isNaN(n) ? 0 : Math.round(n);
         };
 
-        const evento = getVal(['evento', 'ta', 'ticket', 'id'], `EV-${3689000000 + index}`);
-        const coordenador = getVal(['coordenador', 'gestor', 'coord'], 'Não informado');
-        const ddd = getVal(['ddd'], '12');
-        const site = getVal(['site', 'código', 'estação'], 'SITE');
-        const causaDesc = getVal(['causa da perda', 'causa', 'motivo', 'descrição'], 'Sem Causa Mencionada');
-        const tempoMin = parseMinutes(getVal(['tempo perda sla', 'tempo perda', 'tempo', 'atraso']));
+        const evento = getValByKeys(['evento', 'ta', 'ticket', 'id']) || `EV-${3689000000 + index}`;
+        const coordenador = getValByKeys(['coordenador', 'gestor', 'coord', 'equipe']) || 'Não informado';
+        const dddRaw = getValByKeys(['ddd', 'regional', 'uf']) || '12';
+        const site = getValByKeys(['site', 'estação', 'código']) || 'SITE';
+        const causaDesc = getValByKeys(['causa da perda', 'causa', 'motivo', 'descrição']) || 'Sem Causa Mencionada';
+        const tempoMin = parseMinutes(getValByKeys(['tempo perda sla', 'tempo perda', 'tempo', 'atraso']));
 
-        const analiseVal = getVal(['análise', 'analise', 'status', 'tratativa'], 'Pendente');
+        // Coluna L: Análise
+        const analiseVal = getValByKeys(['análise', 'analise', 'status', 'tratativa']);
         const isJustificado = analiseVal.toLowerCase().includes('justificad') || analiseVal.toLowerCase().includes('ok') || analiseVal.toLowerCase().includes('sim');
 
-        let causaClassificada = getVal(['segmento', 'classificação', 'motivo final']);
+        // Coluna M: Segmento
+        let causaClassificada = getValByKeys(['segmento', 'classificação']);
         if (!causaClassificada || causaClassificada.trim() === '') causaClassificada = 'Sem Classificação';
 
-        // Mapeamento Fixa vs Móvel a partir da tecnologia/regional/site
-        const tipoRedeRaw = getVal(['rede', 'tecnologia', 'tipo de rede', 'móvel', 'fixa']);
+        // Tipo de Rede (Fixa x Móvel)
         let tipoRede = 'Móvel';
-        if (tipoRedeRaw.toLowerCase().includes('fixa') || causaClassificada.toLowerCase().includes('fibra') || causaClassificada.toLowerCase().includes('re') || ddd.includes('PAA') || ddd.includes('CAS')) {
+        if (causaClassificada.toLowerCase().includes('conjunta') || causaClassificada.toLowerCase().includes('rede externa') || dddRaw.includes('PAA') || dddRaw.includes('CAS') || causaClassificada.toLowerCase().includes('fibra')) {
           tipoRede = 'Fixa';
-        } else if (site.length === 3 && !site.startsWith('1')) {
-          tipoRede = 'Móvel';
         }
 
         // Data e Semana ISO 8601
-        const rawDataStr = getVal(['data', 'dt_evento', 'data_abertura'], '09/10/2026');
+        const rawDataStr = getValByKeys(['data', 'dt_evento', 'data_abertura']) || '09/10/2026';
         let semanaCalculada = '';
         let mesExtenso = '';
 
@@ -661,9 +692,7 @@
           }
         }
 
-        if (!semanaCalculada) {
-          semanaCalculada = getVal(['semana', 'sem'], 'Semana 41');
-        }
+        if (!semanaCalculada) semanaCalculada = 'Semana 41';
         if (!mesExtenso) mesExtenso = 'Outubro/2026';
 
         return {
@@ -671,7 +700,7 @@
           data: rawDataStr,
           semana: semanaCalculada,
           mes: mesExtenso,
-          ddd: `DDD ${ddd.replace('DDD', '').trim()}`,
+          ddd: `DDD ${dddRaw.replace('DDD', '').trim()}`,
           site,
           coordenador,
           segmento: causaClassificada,
@@ -828,7 +857,7 @@
     }
 
     function renderCharts() {
-      // 1. EVOLUÇÃO SEMANAL (ÚLTIMAS 4 SEMANAS + SEMANA ATUAL - PADRÃO ISO 8601)
+      // 1. EVOLUÇÃO SEMANAL (ÚLTIMAS 4 SEMANAS + SEMANA ATUAL)
       const semanasUnicas = [...new Set(filteredData.map(d => d.semana))].filter(Boolean);
       semanasUnicas.sort((a, b) => (parseInt(a.replace(/\D/g, '')) || 0) - (parseInt(b.replace(/\D/g, '')) || 0));
       const ultimas5Semanas = semanasUnicas.slice(-5);
@@ -864,7 +893,7 @@
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
       });
 
-      // 3. PRINCIPAIS CAUSAS DA PERDA (NOME EXATO SOLICITADO)
+      // 3. PRINCIPAIS CAUSAS DA PERDA
       const causaCounts = {};
       filteredData.forEach(d => causaCounts[d.causa] = (causaCounts[d.causa] || 0) + 1);
       const sortedCausas = Object.entries(causaCounts).sort((a,b) => b[1] - a[1]).slice(0, 5);
